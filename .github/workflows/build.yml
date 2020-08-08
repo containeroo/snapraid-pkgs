@@ -1,0 +1,34 @@
+name: build-snapraid
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build snapraid
+      env:
+        SNAPRAID_VERSION: 11.5
+      run: |
+        apt-get update
+        apt-get install -y gcc git make heckinstall curl libblkid1
+        curl -LO https://github.com/amadvance/snapraid/releases/download/v$SNAPRAID_VERSION/snapraid-$SNAPRAID_VERSION.tar.gz
+        tar -xvf snapraid-$SNAPRAID_VERSION.tar.gz
+        cd snapraid-$SNAPRAID_VERSION
+        ./configure
+        make -j8
+        make -j8 check
+        checkinstall -Dy --install=no --nodoc
+        mkdir /build
+        cp *.deb /build/snapraid-${SNAPRAID_VERSION}.deb
+    - uses: actions/upload-artifact@v2
+      env:
+        SNAPRAID_VERSION: 11.5
+      with:
+        name: snapraid-${SNAPRAID_VERSION}.deb
+        path: /build/snapraid-${SNAPRAID_VERSION}.deb
