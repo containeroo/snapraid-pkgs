@@ -6,13 +6,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
     - name: Build snapraid
       env:
         SNAPRAID_VERSION: 11.5
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc git make heckinstall curl libblkid1
+        sudo apt-get install -y gcc git make checkinstall curl libblkid1
         sudo curl -LO https://github.com/amadvance/snapraid/releases/download/v$SNAPRAID_VERSION/snapraid-$SNAPRAID_VERSION.tar.gz
         sudo tar -xvf snapraid-$SNAPRAID_VERSION.tar.gz
         sudo cd snapraid-$SNAPRAID_VERSION
