@@ -22,8 +22,6 @@ jobs:
         sudo mkdir /build
         sudo cp *.deb /build/snapraid-${SNAPRAID_VERSION}.deb
     - uses: actions/upload-artifact@v2
-      env:
-        SNAPRAID_VERSION: 11.5
       with:
-        name: snapraid-${SNAPRAID_VERSION}.deb
-        path: /build/snapraid-${SNAPRAID_VERSION}.deb
+        name: snapraid_11.5_amd64
+        path: /build/*
