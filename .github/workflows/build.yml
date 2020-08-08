@@ -14,7 +14,7 @@ jobs:
         sudo apt-get install -y gcc git make checkinstall curl libblkid1
         sudo curl -LO https://github.com/amadvance/snapraid/releases/download/v$SNAPRAID_VERSION/snapraid-$SNAPRAID_VERSION.tar.gz
         sudo tar -xvf snapraid-$SNAPRAID_VERSION.tar.gz
-        sudo cd snapraid-$SNAPRAID_VERSION
+        cd snapraid-$SNAPRAID_VERSION
         sudo ./configure
         sudo make -j8
         sudo make -j8 check
