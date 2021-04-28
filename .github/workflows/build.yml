@@ -6,15 +6,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: set snapRAID Version as variable
+      run: |
+        # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
+        export SNAPRAID_VERSION: v11.5
+        echo "::set-env name=SNAPRAID_VERSION::$SNAPRAID_VERSION"
     - name: Build snapraid
-      env:
-        SNAPRAID_VERSION: 11.5
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc git make checkinstall curl libblkid1
-        sudo curl -LO https://github.com/amadvance/snapraid/releases/download/v$SNAPRAID_VERSION/snapraid-$SNAPRAID_VERSION.tar.gz
-        sudo tar -xvf snapraid-$SNAPRAID_VERSION.tar.gz
-        cd snapraid-$SNAPRAID_VERSION
+        sudo curl -LO https://github.com/amadvance/snapraid/releases/download/$SNAPRAID_VERSION/snapraid-${SNAPRAID_VERSION/v}.tar.gz
+        sudo tar -xvf snapraid-${SNAPRAID_VERSION/v}.tar.gz
+        cd snapraid-${SNAPRAID_VERSION/v}
         sudo ./configure
         sudo make -j8
         sudo make -j8 check
@@ -27,8 +30,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v11.5
-        release_name: Release v11.5
+        tag_name: $SNAPRAID_VERSION
+        release_name: Release $SNAPRAID_VERSION
         draft: false
         prerelease: false
     - name: Upload Release Asset
@@ -38,6 +41,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /build/snapraid-11.5.deb
-        asset_name: snapraid-11.5.deb
+        asset_path: /build/snapraid-${SNAPRAID_VERSION/v}.deb
+        asset_name: snapraid-${SNAPRAID_VERSION/v}.deb
         asset_content_type: application/vnd.debian.binary-package
