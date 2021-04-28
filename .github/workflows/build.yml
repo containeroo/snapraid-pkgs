@@ -16,7 +16,7 @@ jobs:
         version=$(echo ${{ env.SNAPRAID_VERSION }} | cut -c 2-)  # remove leading v
         sudo apt-get update
         sudo apt-get install -y gcc git make checkinstall curl libblkid1
-        URL=https://github.com/amadvance/snapraid/releases/download/${{ env.SNAPRAID_VERSION }}/${version}.tar.gz
+        URL=https://github.com/amadvance/snapraid/releases/download/${{ env.SNAPRAID_VERSION }}/snapraid-${version}.tar.gz
         echo $URL
         sudo curl -LO $URL
         sudo tar -xvf snapraid-${version}.tar.gz
