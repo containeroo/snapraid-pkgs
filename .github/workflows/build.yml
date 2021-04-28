@@ -18,14 +18,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y gcc git make checkinstall curl libblkid1
         sudo curl -LO https://github.com/amadvance/snapraid/releases/download/${{ env.SNAPRAID_VERSION }}/snapraid-$SNAPRAID_VERSION_WITHOUT_V.tar.gz
-        sudo tar -xvf snapraid-"$SNAPRAID_VERSION_WITHOUT_V".tar.gz
-        cd snapraid-"$SNAPRAID_VERSION_WITHOUT_V"
+        sudo tar -xvf snapraid-${SNAPRAID_VERSION_WITHOUT_V}.tar.gz
+        cd snapraid-${SNAPRAID_VERSION_WITHOUT_V}
         sudo ./configure
         sudo make -j8
         sudo make -j8 check
         sudo checkinstall -Dy --install=no --nodoc
         sudo mkdir /build
-        sudo cp *.deb /build/snapraid-"$SNAPRAID_VERSION_WITHOUT_V".deb
+        sudo cp *.deb /build/snapraid-${SNAPRAID_VERSION_WITHOUT_V}.deb
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -45,6 +45,6 @@ jobs:
         SNAPRAID_VERSION_WITHOUT_V: ${SNAPRAID/v}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /build/snapraid-$SNAPRAID_VERSION_WITHOUT_V.deb
-        asset_name: snapraid-$SNAPRAID_VERSION_WITHOUT_V.deb
+        asset_path: /build/snapraid-${SNAPRAID_VERSION_WITHOUT_V}.deb
+        asset_name: snapraid-${SNAPRAID_VERSION_WITHOUT_V}.deb
         asset_content_type: application/vnd.debian.binary-package
