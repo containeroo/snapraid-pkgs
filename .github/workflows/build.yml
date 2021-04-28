@@ -10,10 +10,10 @@ jobs:
       id: tag
       run: |
         # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
-        echo "SNAPRAID_VERSION: v11.4" >> $GITHUB_ENV
+        echo "SNAPRAID_VERSION=v11.4" >> $GITHUB_ENV
     - name: Build snapraid
       run: |
-        version=$(echo ${{ env.SNAPRAID_VERSION }} | cut -c 2-)
+        version=$(echo ${{ env.SNAPRAID_VERSION }} | cut -c 2-)  # remove leading v
         sudo apt-get update
         sudo apt-get install -y gcc git make checkinstall curl libblkid1
         URL=https://github.com/amadvance/snapraid/releases/download/${{ steps.tag.outputs.SNAPRAID_VERSION }}/${version}.tar.gz
@@ -42,7 +42,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        version: $(echo ${{ env.SNAPRAID_VERSION }} | cut -c 2-)
+        version: $(echo ${{ env.SNAPRAID_VERSION }} | cut -c 2-)  # remove leading v
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: /build/snapraid-${version}.deb
