@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: set snapRAID Version as variable
-      run: |
+      run:
         # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
         echo "SNAPRAID_VERSION=v11.4 >> $GITHUB_ENV
     - name: Build snapraid
