@@ -9,7 +9,7 @@ jobs:
     - name: set snapRAID Version as variable
       run:
         # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
-        echo "SNAPRAID_VERSION=v11.4 >> $GITHUB_ENV
+        echo "SNAPRAID_VERSION=v11.4" >> $GITHUB_ENV
     - name: Build snapraid
       env:
         SNAPRAID: ${{ env.SNAPRAID_VERSION }}
