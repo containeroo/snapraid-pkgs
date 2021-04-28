@@ -34,8 +34,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.SNAPRAID_VERSION }}
-        release_name: Release ${{ env.SNAPRAID_VERSION }}
+        tag_name: ${{ env.SNAPRAID_VERSION_V }}
+        release_name: Release ${{ env.SNAPRAID_VERSION_V }}
         draft: false
         prerelease: false
     - name: Upload Release Asset
