@@ -11,23 +11,22 @@ jobs:
       run: |
         # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
         echo ::set-output name=SNAPRAID_VERSION::v11.4
-        version=$(echo ${{ SNAPRAID_VERSION }} | cut -c 2-)
-        echo ::set-output name=version::$version
     - name: Build snapraid
       run: |
+        version=$(echo ${{ SNAPRAID_VERSION }} | cut -c 2-)
         sudo apt-get update
         sudo apt-get install -y gcc git make checkinstall curl libblkid1
-        URL=https://github.com/amadvance/snapraid/releases/download/${{ steps.tag.outputs.SNAPRAID_VERSION }}/${{ steps.tag.outputs.version }}.tar.gz
+        URL=https://github.com/amadvance/snapraid/releases/download/${{ steps.tag.outputs.SNAPRAID_VERSION }}/${version}.tar.gz
         echo $URL
         sudo curl -LO $URL
-        sudo tar -xvf snapraid-${{ steps.tag.outputs.version }}.tar.gz
-        cd snapraid-${{ steps.tag.outputs.version }}
+        sudo tar -xvf snapraid-${version}.tar.gz
+        cd snapraid-$version
         sudo ./configure
         sudo make -j8
         sudo make -j8 check
         sudo checkinstall -Dy --install=no --nodoc
         sudo mkdir /build
-        sudo cp *.deb /build/snapraid-${{ steps.tag.outputs.version }}.deb
+        sudo cp *.deb /build/snapraid-${version}.deb
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -43,10 +42,9 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SNAPRAID: ${{ env.SNAPRAID_VERSION }}
-        SNAPRAID_VERSION_WITHOUT_V: ${SNAPRAID/v}
+        version: $(echo ${{ SNAPRAID_VERSION }} | cut -c 2-)
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /build/snapraid-${SNAPRAID_VERSION_WITHOUT_V}.deb
-        asset_name: snapraid-${SNAPRAID_VERSION_WITHOUT_V}.deb
+        asset_path: /build/snapraid-${version}.deb
+        asset_name: snapraid-${version}.deb
         asset_content_type: application/vnd.debian.binary-package
