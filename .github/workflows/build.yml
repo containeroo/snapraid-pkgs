@@ -10,7 +10,7 @@ jobs:
       run: |
         # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
         echo "SNAPRAID_VERSION=v11.4" >> $GITHUB_ENV
-        echo "SNAPRAID_VERSION_WITHOUT_V: ${SNAPRAID_VERSION/v}" >> $GITHUB_ENV
+        echo "SNAPRAID_VERSION_WITHOUT_V=${SNAPRAID_VERSION/v}" >> $GITHUB_ENV
     - name: Build snapraid
       run: |
         sudo apt-get update
