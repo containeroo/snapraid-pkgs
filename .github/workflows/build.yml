@@ -6,34 +6,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: set snapRAID Version as variable
+    - name: Prepare release tag
+      id: tag
       run: |
         # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
-        echo "SNAPRAID_VERSION=v11.4" >> $GITHUB_ENV
+        echo ::set-output name=SNAPRAID_VERSION::${v11.4}
+        echo ::set-output name=version::${SNAPRAID_VERSION/v}
     - name: Build snapraid
-      env:
-        SNAPRAID: ${{ env.SNAPRAID_VERSION }}
-        SNAPRAID_VERSION_WITHOUT_V: ${SNAPRAID/v}
       run: |
         sudo apt-get update
         sudo apt-get install -y gcc git make checkinstall curl libblkid1
-        sudo curl -LO https://github.com/amadvance/snapraid/releases/download/${{ env.SNAPRAID_VERSION }}/snapraid-$SNAPRAID_VERSION_WITHOUT_V.tar.gz
-        sudo tar -xvf snapraid-${SNAPRAID_VERSION_WITHOUT_V}.tar.gz
-        cd snapraid-${SNAPRAID_VERSION_WITHOUT_V}
+        sudo curl -LO https://github.com/amadvance/snapraid/releases/download/${{ steps.tag.outputs.SNAPRAID_VERSION }}/${{ steps.tag.outputs.version }}.tar.gz
+        sudo tar -xvf snapraid-${{ steps.tag.outputs.version }}.tar.gz
+        cd snapraid-${{ steps.tag.outputs.version }}
         sudo ./configure
         sudo make -j8
         sudo make -j8 check
         sudo checkinstall -Dy --install=no --nodoc
         sudo mkdir /build
-        sudo cp *.deb /build/snapraid-${SNAPRAID_VERSION_WITHOUT_V}.deb
+        sudo cp *.deb /build/snapraid-${{ steps.tag.outputs.version }}.deb
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.SNAPRAID_VERSION }}
-        release_name: Release ${{ env.SNAPRAID_VERSION }}
+        tag_name: ${{ steps.tag.outputs.SNAPRAID_VERSION }}
+        release_name: Release ${{ steps.tag.outputs.SNAPRAID_VERSION }}
         draft: false
         prerelease: false
     - name: Upload Release Asset
