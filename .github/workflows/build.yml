@@ -21,7 +21,7 @@ jobs:
         echo "download URL is: $URL"
         sudo curl -LO $URL
         sudo tar -xvf snapraid-${{ env.SNAPRAID_VERSION }}.tar.gz
-        cd snapraid-$version
+        cd snapraid-${{ env.SNAPRAID_VERSION }}
         sudo ./configure
         sudo make -j8
         sudo make -j8 check
