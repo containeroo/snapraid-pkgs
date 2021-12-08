@@ -10,7 +10,7 @@ jobs:
       id: tag
       run: |
         # renovate: datasource=github-releases depName=amadvance/snapraid versioning=loose
-        SNAPRAID_VERSION=v11.6
+        SNAPRAID_VERSION=v12.0
         echo "SNAPRAID_VERSION_V=$(echo ${SNAPRAID_VERSION})" >> $GITHUB_ENV
         echo "SNAPRAID_VERSION=$(echo ${SNAPRAID_VERSION} | cut -c 2-)" >> $GITHUB_ENV
     - name: Build snapraid
